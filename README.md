@@ -8,6 +8,14 @@ yarn
 yarn start
 ```
 
+or
+
+```sh
+cd widgets-editor
+yarn
+yarn start
+```
+
 ⌘⌘⌘
 
 Want your own workshop? → [PerfPerfPerf](https://3perf.com)

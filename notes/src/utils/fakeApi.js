@@ -1,4 +1,5 @@
-const sleep = (timeout) => new Promise((resolve) => setTimeout(resolve, 1300));
+const sleep = (timeout) =>
+  new Promise((resolve) => setTimeout(resolve, timeout));
 
 const fakeApi = {
   setPublicStatus: async (_status) => {
