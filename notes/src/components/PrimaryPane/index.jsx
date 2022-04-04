@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import fakeApi from "../../utils/fakeApi";
 import NoteEditor from "../NoteEditor";
 import NoteView from "../NoteView";
@@ -8,26 +8,47 @@ import { ActiveAuthors } from "../ActiveAuthors";
 import spinner from "./spinner.svg";
 import "./index.css";
 
+// const ButtonWrapper = memo(function ButtonWrapper(props) {
+//   return <Button {...props} />;
+// });
+
 function PrimaryPane({ activeNoteId, notes, saveNote }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
   const [publishedAt, setPublishedAt] = useState(null);
 
-  const togglePublic = async () => {
-    setIsLoading(true);
+  const togglePublic = useCallback(
+    async function () {
+      setIsLoading(true);
 
-    if (isPublic) {
-      await fakeApi.setPublicStatus(false);
-      setIsPublic(false);
-    } else {
-      await fakeApi.setPublicStatus(true);
-      const publishedDate = await fakeApi.getPublishedDate();
-      setIsPublic(true);
-      setPublishedAt(publishedDate.toLocaleTimeString());
-    }
+      if (isPublic) {
+        await fakeApi.setPublicStatus(false);
+        setIsPublic(false);
+      } else {
+        await fakeApi.setPublicStatus(true);
+        const publishedDate = await fakeApi.getPublishedDate();
+        setIsPublic(true);
+        setPublishedAt(publishedDate.toLocaleTimeString());
+      }
 
-    setIsLoading(false);
-  };
+      setIsLoading(false);
+    },
+    [isPublic]
+  );
+
+  // useCallback = (callback, deps) => useMemo(() => callback, deps)
+  // useMemo vs memo
+
+  const buttonMemoized = (
+    <Button
+      variant="outlined"
+      onClick={togglePublic}
+      disabled={isLoading}
+      startIcon={isPublic ? "🤫" : "👀"}
+    >
+      {isLoading ? "Loading..." : isPublic ? "Make Private" : "Make Public"}
+    </Button>
+  );
 
   if (!activeNoteId) {
     return (
@@ -50,18 +71,7 @@ function PrimaryPane({ activeNoteId, notes, saveNote }) {
 
       <div className="primary-pane__content">
         <div className="primary-pane__controls">
-          <Button
-            variant="outlined"
-            onClick={togglePublic}
-            disabled={isLoading}
-            startIcon={isPublic ? "🤫" : "👀"}
-          >
-            {isLoading
-              ? "Loading..."
-              : isPublic
-              ? "Make Private"
-              : "Make Public"}
-          </Button>
+          {buttonMemoized}
           {!isLoading && isPublic && <span>Published at: {publishedAt}</span>}
         </div>
         <NoteEditor

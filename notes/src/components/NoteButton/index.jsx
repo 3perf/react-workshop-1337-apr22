@@ -1,8 +1,16 @@
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 import { format } from "date-fns";
+import { memo } from "react";
 
-function NoteButton({ isActive, onNoteActivated, text, filterText, date }) {
+const NoteButton = memo(function NoteButton({
+  id,
+  isActive,
+  onNoteActivated,
+  text,
+  filterText,
+  date,
+}) {
   const className = [
     "notes-list__button",
     "notes-list__note",
@@ -12,14 +20,14 @@ function NoteButton({ isActive, onNoteActivated, text, filterText, date }) {
     .join(" ");
 
   return (
-    <button className={className} onClick={onNoteActivated}>
+    <button className={className} onClick={() => onNoteActivated(id)}>
       <span className="notes-list__note-meta">
         {format(date, "d MMM yyyy")}
       </span>
       {generateNoteHeader(text, filterText)}
     </button>
   );
-}
+});
 
 function generateNoteHeader(text, filterText) {
   let firstLine = text

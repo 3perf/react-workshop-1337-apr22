@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Button, ButtonGroup } from "@mui/material";
 import FilterInput from "../FilterInput";
 import NoteButton from "../NoteButton";
@@ -33,16 +33,19 @@ function NotesList({
 
             return text.toLowerCase().includes(filter.toLowerCase());
           })
-          .map(({ id, text, date }) => (
-            <NoteButton
-              key={id}
-              isActive={activeNoteId === id}
-              onNoteActivated={() => onNoteActivated(id)}
-              text={text}
-              filterText={filter}
-              date={date}
-            />
-          ))}
+          .map(({ id, text, date }) => {
+            return (
+              <NoteButton
+                key={id}
+                id={id}
+                isActive={activeNoteId === id}
+                onNoteActivated={onNoteActivated}
+                text={text}
+                filterText={filter}
+                date={date}
+              />
+            );
+          })}
       </div>
 
       <div className="notes-list__controls">

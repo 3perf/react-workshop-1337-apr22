@@ -43,12 +43,13 @@ export type ResizableComponentProps = WidgetProps & {
   paddingOffset: number;
 };
 
-export const ResizableComponent = memo(function ResizableComponent(
-  props: ResizableComponentProps,
-) {
+function ResizableComponent(props: ResizableComponentProps) {
   const resizableRef = useRef<HTMLDivElement>(null);
   // Fetch information from the context
-  const { updateWidget } = useContext(EditorContext);
+  const updateWidget = useContextSelector(
+    EditorContext,
+    (context) => context.updateWidget,
+  );
 
   const { updateDropTargetRows, persistDropTargetRows } = useContext(
     DropTargetContext,
@@ -270,6 +271,10 @@ export const ResizableComponent = memo(function ResizableComponent(
       </VisibilityContainer>
     </Resizable>
   );
-});
+}
 
-export default ResizableComponent;
+export const ResizableComponentMemo = memo(ResizableComponent);
+
+ResizableComponent.whyDidYouRender = true;
+
+export default ResizableComponentMemo;

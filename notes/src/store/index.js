@@ -9,6 +9,7 @@ const store = configureStore({
     noteMetadata: noteMetadataReducer,
   }),
   preloadedState: {
+    activeUsersThisMonth: 3,
     users: [
       {
         id: 1,
