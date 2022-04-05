@@ -1,8 +1,9 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useMemo, useState, useTransition } from "react";
 import { Button, ButtonGroup } from "@mui/material";
 import FilterInput from "../FilterInput";
 import NoteButton from "../NoteButton";
 import "./index.css";
+import _ from "lodash";
 
 const NoteButtonMemoWrapper = memo(function NoteButtonMemoWrapper({
   id,
@@ -34,14 +35,36 @@ function NotesList({
   onNewNotesRequested,
   onDeleteAllRequested,
 }) {
-  const [filter, setFilter] = useState("");
+  const [filterInput, setFilterInput] = useState("");
+  const [filterValue, setFilterValue] = useState("");
+  // const [isTransitioning, startTransition] = useTransition();
+
+  // const setFilterValueDebounced = useMemo(
+  //   () => _.throttle(setFilterValue, 500),
+  //   []
+  // );
 
   return (
-    <div className="notes-list" style={{ position: "relative" }}>
+    <div
+      className="notes-list"
+      style={{ position: "relative" /*, opacity: isTransitioning ? 0.5 : 1 */ }}
+    >
       <div className="notes-list__filter">
         <FilterInput
-          filter={filter}
-          onChange={setFilter}
+          filter={filterInput}
+          onChange={(text) => {
+            setFilterInput(text);
+            startTransition(() => {
+              // ALL_NEXT_UPDATES_PRIORITY = "non_critical"
+              setFilterValue(text);
+
+              /*
+                while (update_priority === "non_critical" && noPendingUpdates()) { // → isInputPending()
+                  renderNextComponent() // → <ReactMarkdown> → 300ms
+                }
+              */
+            });
+          }}
           noteCount={Object.keys(notes).length}
         />
       </div>
@@ -50,11 +73,11 @@ function NotesList({
         {Object.values(notes)
           .sort((a, b) => b.date.getTime() - a.date.getTime())
           .filter(({ text }) => {
-            if (!filter) {
+            if (!filterValue) {
               return true;
             }
 
-            return text.toLowerCase().includes(filter.toLowerCase());
+            return text.toLowerCase().includes(filterValue.toLowerCase());
           })
           .map(({ id, text, date }) => (
             <NoteButtonMemoWrapper
@@ -63,7 +86,7 @@ function NotesList({
               activeNoteId={activeNoteId}
               onNoteActivated={onNoteActivated}
               text={text}
-              filterText={filter}
+              filterText={filterValue}
               date={date}
             />
           ))}

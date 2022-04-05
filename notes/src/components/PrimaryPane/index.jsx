@@ -7,6 +7,7 @@ import DarkModeSwitcher from "../DarkModeSwitcher";
 import { ActiveAuthors } from "../ActiveAuthors";
 import spinner from "./spinner.svg";
 import "./index.css";
+import { unstable_batchedUpdates } from "react-dom";
 
 function PrimaryPane({ activeNoteId, notes, saveNote }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,19 +16,60 @@ function PrimaryPane({ activeNoteId, notes, saveNote }) {
 
   const togglePublic = async () => {
     setIsLoading(true);
+    console.log("setIsLoading(true)");
 
     if (isPublic) {
       await fakeApi.setPublicStatus(false);
-      setIsPublic(false);
+
+      unstable_batchedUpdates(() => {
+        setIsPublic(false);
+        console.log("setIsPublic(false)");
+
+        setIsLoading(false);
+        console.log("setIsLoading(false)");
+      });
     } else {
       await fakeApi.setPublicStatus(true);
       const publishedDate = await fakeApi.getPublishedDate();
-      setIsPublic(true);
-      setPublishedAt(publishedDate.toLocaleTimeString());
-    }
 
-    setIsLoading(false);
+      unstable_batchedUpdates(() => {
+        setIsPublic(true);
+        console.log("setIsPublic(true)");
+        setPublishedAt(publishedDate.toLocaleTimeString());
+        console.log("setPublishedAt(new Date().toLocaleTimeString())");
+
+        setIsLoading(false);
+        console.log("setIsLoading(false)");
+      });
+    }
   };
+
+  /*
+  unstable_batchedUpdates = (callback) => {
+    SHOULD_BATCH_UPDATES = true;
+    callback();
+    SHOULD_BATCH_UPDATES = false;
+    processPendingUpdates();
+  }
+
+  setState = (...update) => {
+    if (SHOULD_BATCH_UPDATES) {
+      pendingUpdates.push(update);
+    } else {
+      pendingUpdates.push(update);
+      processPendingUpdates();
+    }
+  }
+
+  onClick = (listener) => {
+    unstable_batchedUpdates(() => {
+      listener()
+    })
+  }
+
+  */
+
+  console.log("rerendered");
 
   if (!activeNoteId) {
     return (
