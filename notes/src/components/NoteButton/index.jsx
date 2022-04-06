@@ -22,7 +22,6 @@ function NoteButton({ isActive, onNoteActivated, text, filterText, date }) {
         isOverflowing
       );
     }
-    console.log(new Error("layoutEffects").stack);
   }, [text]);
 
   const className = [
