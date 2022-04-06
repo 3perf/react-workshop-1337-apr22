@@ -206,8 +206,8 @@ module.exports = function(webpackEnv) {
         .map((ext) => `.${ext}`)
         .filter((ext) => useTypeScript || !ext.includes("ts")),
       alias: {
-        "react-dom$": "react-dom/profiling",
-        "scheduler/tracing": "scheduler/tracing-profiling",
+        // "react-dom$": "react-dom/profiling",
+        // "scheduler/tracing": "scheduler/tracing-profiling",
         // Track react-redux’s useSelector
         // See https://github.com/welldone-software/why-did-you-render#custom-hooks
         // and https://github.com/welldone-software/why-did-you-render/issues/85

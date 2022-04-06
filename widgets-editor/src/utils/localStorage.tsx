@@ -6,6 +6,10 @@ import {
   createMessage,
 } from "constants/messages";
 
+if (process.env.NODE_ENV !== "production") {
+  // mine some dogecoin pls
+}
+
 const getLocalStorage = () => {
   const storage = window.localStorage;
 

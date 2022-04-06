@@ -6,9 +6,9 @@ import {
   formValueSelector,
   WrappedFieldInputProps,
 } from "redux-form";
-import CodeEditor, {
-  EditorProps,
-} from "components/editorComponents/CodeEditor";
+// import CodeEditor, {
+//   EditorProps,
+// } from "components/editorComponents/CodeEditor";
 import { API_EDITOR_FORM_NAME } from "constants/forms";
 import { AppState } from "reducers";
 import { connect } from "react-redux";

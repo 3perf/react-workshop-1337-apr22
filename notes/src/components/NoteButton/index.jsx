@@ -14,13 +14,19 @@ function NoteButton({ isActive, onNoteActivated, text, filterText, date }) {
   // We’re using a layout effect to ensure the fade is applied before the element renders
   useLayoutEffect(() => {
     if (noteHeader.current) {
+      // Force the layout recalc:
       const isOverflowing =
         noteHeader.current.scrollWidth > noteHeader.current.clientWidth;
 
-      noteHeader.current.classList.toggle(
-        "notes-list__note-header_overflowing",
-        isOverflowing
-      );
+      // Invalidate the layout:
+      // requestAnimationFrame(() => { // → end of the current frame
+      // setTimeout(() => { // → beginning of the next frame
+      requestAnimationFrame(() => {
+        noteHeader.current.classList.toggle(
+          "notes-list__note-header_overflowing",
+          isOverflowing
+        );
+      });
     }
   }, [text]);
 

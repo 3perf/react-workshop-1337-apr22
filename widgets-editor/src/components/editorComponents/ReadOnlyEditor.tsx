@@ -1,11 +1,15 @@
 import React, { ChangeEvent } from "react";
-import CodeEditor, { EditorProps } from "./CodeEditor";
+// import CodeEditor, { EditorProps } from "./CodeEditor";
 import {
   EditorModes,
   EditorSize,
   EditorTheme,
   TabBehaviour,
 } from "components/editorComponents/CodeEditor/EditorConfig";
+
+const CodeEditorLazy = React.lazy(() =>
+  import(/* webpackPrefetch: true */ "./CodeEditor"),
+);
 
 interface Props {
   input: {
@@ -31,7 +35,7 @@ const ReadOnlyEditor = (props: Props) => {
     borderLess: true,
     folding: props.folding,
   };
-  return <CodeEditor {...editorProps} />;
+  return <CodeEditorLazy {...editorProps} />;
 };
 
 export default ReadOnlyEditor;

@@ -1,8 +1,8 @@
 import React from "react";
 import { Field, BaseFieldProps } from "redux-form";
-import CodeEditor, {
-  EditorStyleProps,
-} from "components/editorComponents/CodeEditor";
+// import CodeEditor, {
+//   EditorStyleProps,
+// } from "components/editorComponents/CodeEditor";
 import {
   CodeEditorBorder,
   EditorModes,
